@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Daisyworld · Agents.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&amp;display=swap" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="Agents.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit">Agents.jl</span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Introduction</a></li><li><a class="tocitem" href="../../tutorial/">Tutorial</a></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox" checked/><label class="tocitem" for="menuitem-3"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../schelling/">Schelling&#39;s segregation model</a></li><li><a class="tocitem" href="../sugarscape/">Sugarscape</a></li><li><a class="tocitem" href="../sir/">SIR model for the spread of COVID-19</a></li><li><a class="tocitem" href="../social_distancing/">Continuous space social distancing for COVID-19</a></li><li><a class="tocitem" href="../wealth_distribution/">Wealth distribution</a></li><li><a class="tocitem" href="../forest_fire/">Forest fire</a></li><li><a class="tocitem" href="../game_of_life_2D_CA/">Conway&#39;s game of life</a></li><li><a class="tocitem" href="../wright-fisher/">Wright-Fisher model of evolution</a></li><li><a class="tocitem" href="../hk/">Hegselmann-Krause opinion dynamics</a></li><li><a class="tocitem" href="../flock/">Flocking</a></li><li class="is-active"><a class="tocitem" href>Daisyworld</a><ul class="internal"><li><a class="tocitem" href="#Overview-of-Daisyworld"><span>Overview of Daisyworld</span></a></li><li><a class="tocitem" href="#Defining-the-agent-types"><span>Defining the agent types</span></a></li><li><a class="tocitem" href="#World-heating"><span>World heating</span></a></li><li><a class="tocitem" href="#Daisy-dynamics"><span>Daisy dynamics</span></a></li><li><a class="tocitem" href="#Initialising-Daisyworld"><span>Initialising Daisyworld</span></a></li><li><a class="tocitem" href="#Visualizing-and-animating"><span>Visualizing &amp; animating</span></a></li><li><a class="tocitem" href="#Time-dependent-dynamics"><span>Time dependent dynamics</span></a></li><li><a class="tocitem" href="#Interactive-scientific-research"><span>Interactive scientific research</span></a></li></ul></li><li><a class="tocitem" href="../predator_prey/">Predator-Prey</a></li><li><a class="tocitem" href="../growing_bacteria/">Bacteria Growth</a></li><li><a class="tocitem" href="../opinion_spread/">Opinion spread</a></li></ul></li><li><a class="tocitem" href="../../models/">Predefined Models</a></li><li><a class="tocitem" href="../../api/">API</a></li><li><a class="tocitem" href="../../interact/">Interactive application</a></li><li><input class="collapse-toggle" id="menuitem-7" type="checkbox"/><label class="tocitem" for="menuitem-7"><span class="docs-label">Ecosystem Integration</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../diffeq/">DifferentialEquations.jl</a></li><li><a class="tocitem" href="../optim/">BlackBoxOptim</a></li></ul></li><li><a class="tocitem" href="../../mesa/">Comparison against Mesa (Python)</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Daisyworld</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Daisyworld</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/JuliaDynamics/Agents.jl/blob/master/examples/daisyworld.jl" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Daisyworld"><a class="docs-heading-anchor" href="#Daisyworld">Daisyworld</a><a id="Daisyworld-1"></a><a class="docs-heading-anchor-permalink" href="#Daisyworld" title="Permalink"></a></h1><p><img src="daisyworld.gif" alt/></p><p>Study this example to learn about</p><ul><li>Simple agent properties with complex model interactions</li><li>Collecting data with the low-level data collection API</li><li>Diffusion of a quantity in a <code>GridSpace</code></li><li>the <code>fill_space!</code> function</li><li>represent a space &quot;surface property&quot; as an agent</li><li>counting time in the model and having time-dependent dynamics</li><li>data collection in a mixed-agent model</li><li>performing interactive scientific research</li></ul><h2 id="Overview-of-Daisyworld"><a class="docs-heading-anchor" href="#Overview-of-Daisyworld">Overview of Daisyworld</a><a id="Overview-of-Daisyworld-1"></a><a class="docs-heading-anchor-permalink" href="#Overview-of-Daisyworld" title="Permalink"></a></h2><p>This model explores the <a href="https://en.wikipedia.org/wiki/Gaia_hypothesis">Gaia hypothesis</a>, which considers the Earth as a single, self-regulating system including both living and non-living parts.</p><p>Daisyworld is filled with black and white daisies. Their albedo&#39;s differ, with black daisies absorbing light and heat, warming the area around them; white daisies doing the opposite. Daisies can only reproduce within a certain temperature range, meaning too much (or too little) heat coming from the sun and/or surrounds will ultimately halt daisy propagation.</p><p>When the climate is too cold it is necessary for the black daisies to propagate in order to raise the temperature, and vice versa – when the climate is too warm, it is necessary for more white daisies to be produced in order to cool the temperature. The interplay of the living and non living aspects of this world manages to find an equilibrium over a wide range of parameter settings, although with enough external forcing, the daisies will not be able to regulate the temperature of the planet and eventually go extinct.</p><h2 id="Defining-the-agent-types"><a class="docs-heading-anchor" href="#Defining-the-agent-types">Defining the agent types</a><a id="Defining-the-agent-types-1"></a><a class="docs-heading-anchor-permalink" href="#Defining-the-agent-types" title="Permalink"></a></h2><p><code>Daisy</code> has three values (other than the required <code>id</code> and <code>pos</code> for an agent that lives on a <a href="../../tutorial/#Agents.GridSpace"><code>GridSpace</code></a>. Each daisy has an <code>age</code>, confined later by a maximum age set by the user, a <code>breed</code> (either <code>:black</code> or <code>:white</code>) and an associated <code>albedo</code> value, again set by the user. <code>Land</code> represents the surface. We could make <code>Land</code> also have an albedo field, but in this world, the entire surface has the same albedo and thus we make it a model parameter.</p><p>Notice that the <code>Land</code> does not necessarily have to be an agent, and one could represent surface temperature via a matrix (parameter of the model). This is done in an older version, see file <code>examples/daisyworld_matrix.jl</code>. The old version has a slight performance advantage. However, the advantage of making the surface composed of agents is that visualization is simple and one can use the interactive application to also visualize surface temperature. It is also available from the <code>Models</code> module as <a href="../../models/#Agents.Models.daisyworld-Tuple{}"><code>Models.daisyworld</code></a>.</p><pre><code class="language-julia">using Agents, AgentsPlots, Plots
+using Statistics: mean
+
+mutable struct Daisy &lt;: AbstractAgent
+    id::Int
+    pos::Tuple{Int,Int}
+    breed::Symbol
+    age::Int
+    albedo::Float64 # 0-1 fraction
+end
+
+mutable struct Land &lt;: AbstractAgent
+    id::Int
+    pos::Tuple{Int,Int}
+    temperature::Float64
+end
+
+const DaisyWorld = ABM{Union{Daisy, Land}};</code></pre><h2 id="World-heating"><a class="docs-heading-anchor" href="#World-heating">World heating</a><a id="World-heating-1"></a><a class="docs-heading-anchor-permalink" href="#World-heating" title="Permalink"></a></h2><p>The surface temperature of the world is heated by its sun, but daisies growing upon it absorb or reflect the starlight – altering the local temperature.</p><pre><code class="language-julia">function update_surface_temperature!(node::Int, model::DaisyWorld)
+    ids = get_node_contents(node, model)
+    # All grid points have at least one agent (the land)
+    absorbed_luminosity = if length(ids) == 1
+        # Set luminosity via surface albedo
+        (1 - model.surface_albedo) * model.solar_luminosity
+    else
+        # more than 1 agents: daisy exists
+        # Set luminosity via daisy albedo
+        (1 - model[ids[2]].albedo) * model.solar_luminosity
+    end
+    # We expect local heating to be 80 ᵒC for an absorbed luminosity of 1,
+    # approximately 30 for 0.5 and approximately -273 for 0.01.
+    local_heating = absorbed_luminosity &gt; 0 ? 72 * log(absorbed_luminosity) + 80 : 80
+    # Surface temperature is the average of the current temperature and local heating.
+    T0 = model[ids[1]].temperature
+    model[ids[1]].temperature = (T0 + local_heating) / 2
+end</code></pre><p>In addition, temperature diffuses over time</p><pre><code class="language-julia">function diffuse_temperature!(node::Int, model::DaisyWorld)
+    ratio = get(model.properties, :ratio, 0.5) # diffusion ratio
+    ids = space_neighbors(node, model)
+    meantemp = sum(model[i].temperature for i in ids if model[i] isa Land)/8
+    land = model[get_node_contents(node, model)[1]] # land at current node
+    # Each neighbor land patch is giving up 1/8 of the diffused
+    # amount to each of *its* neighbors
+    land.temperature = (1 - ratio)*land.temperature + ratio*meantemp
+end</code></pre><h2 id="Daisy-dynamics"><a class="docs-heading-anchor" href="#Daisy-dynamics">Daisy dynamics</a><a id="Daisy-dynamics-1"></a><a class="docs-heading-anchor-permalink" href="#Daisy-dynamics" title="Permalink"></a></h2><p>The final piece of the puzzle is the life-cycle of each daisy. This method defines an optimal temperature for growth. If the temperature gets too hot or too cold, daisies will not wish to propagate. So long as the temperature is favorable, daisies compete for land and attempt to spawn a new plant of their <code>breed</code> in locations close to them.</p><pre><code class="language-julia">function propagate!(node::Int, model::DaisyWorld)
+    ids = get_node_contents(node, model)
+    if length(ids) &gt; 1
+        daisy = model[ids[2]]
+        temperature = model[ids[1]].temperature
+        # Set optimum growth rate to 22.5 ᵒC, with bounds of [5, 40]
+        seed_threshold = (0.1457 * temperature - 0.0032 * temperature^2) - 0.6443
+        if rand() &lt; seed_threshold
+            # Collect all adjacent cells that have no daisies
+            empty_neighbors = Int[]
+            neighbors = node_neighbors(node, model)
+            for n in neighbors
+                if length(get_node_contents(n, model)) == 1
+                    push!(empty_neighbors, n)
+                end
+            end
+            if !isempty(empty_neighbors)
+                # Seed a new daisy in one of those cells
+                seeding_place = vertex2coord(rand(empty_neighbors), model)
+                a = Daisy(nextid(model), seeding_place, daisy.breed, 0, daisy.albedo)
+                add_agent_pos!(a, model)
+            end
+        end
+    end
+end</code></pre><p>And if the daisies cross an age threshold, they die out. Death is controlled by the <code>agent_step</code> function</p><pre><code class="language-julia">function agent_step!(agent::Daisy, model::DaisyWorld)
+    agent.age += 1
+    agent.age &gt;= model.max_age &amp;&amp; kill_agent!(agent, model)
+end</code></pre><p>We also need to define a version for the <code>Land</code> instances (the dynamics of the <code>Land</code> are resolved at model level)</p><pre><code class="language-julia">agent_step!(agent::Land, model::DaisyWorld) = nothing</code></pre><p>The model step function and agent step functions for Agents.jl to advance Daisyworld&#39;s dynamics. Since we have constructed a number of helper functions, these methods are quite straightforward.</p><pre><code class="language-julia">function model_step!(model)
+    for n in nodes(model)
+        update_surface_temperature!(n, model)
+        diffuse_temperature!(n, model)
+        propagate!(n, model)
+    end
+    model.tick += 1
+    solar_activity!(model)
+end</code></pre><p>Notice that <code>solar_activity!</code> changes the incoming solar radiation over time, if the given &quot;scenario&quot; (a model parameter) is <code>:ramp</code>. The parameter <code>tick</code> of the model keeps track of time.</p><pre><code class="language-julia">function solar_activity!(model::DaisyWorld)
+    if model.scenario == :ramp
+        if model.tick &gt; 200 &amp;&amp; model.tick &lt;= 400
+            model.solar_luminosity += model.solar_change
+        end
+        if model.tick &gt; 500 &amp;&amp; model.tick &lt;= 750
+            model.solar_luminosity -= model.solar_change/2
+        end
+    elseif model.scenario == :change
+        model.solar_luminosity += model.solar_change
+    end
+end</code></pre><h2 id="Initialising-Daisyworld"><a class="docs-heading-anchor" href="#Initialising-Daisyworld">Initialising Daisyworld</a><a id="Initialising-Daisyworld-1"></a><a class="docs-heading-anchor-permalink" href="#Initialising-Daisyworld" title="Permalink"></a></h2><p>Here, we construct a function to initialize a Daisyworld. We use <a href="../../api/#Agents.fill_space!"><code>fill_space!</code></a> to fill the space with <code>Land</code> instances. Then, we need to know how many daisies of each type to seed the planet with and what their albedo&#39;s are. We also want a value for surface albedo, as well as solar intensity (and we also choose between constant or time-dependent intensity with <code>scenario</code>).</p><pre><code class="language-julia">import StatsBase
+import DrWatson: @dict
+
+function daisyworld(;
+        griddims = (30, 30),
+        max_age = 25,
+        init_white = 0.2, # % cover of the world surface of white breed
+        init_black = 0.2, # % cover of the world surface of black breed
+        albedo_white = 0.75,
+        albedo_black = 0.25,
+        surface_albedo = 0.4,
+        solar_change = 0.005,
+        solar_luminosity = 1.0, # initial luminosity
+        scenario = :default,
+    )
+
+    space = GridSpace(griddims, moore = true, periodic = true)
+    properties = @dict max_age surface_albedo solar_luminosity solar_change scenario
+    properties[:tick] = 0
+    # create a scheduler that only schedules Daisies
+    daisysched(model) = [a.id for a in allagents(model) if a isa Daisy]
+    model = ABM(Union{Daisy, Land}, space;
+        scheduler = daisysched, properties = properties, warn = false
+    )
+
+    # fill model with `Land`: every grid cell has 1 land instance
+    fill_space!(Land, model, 0.0) # zero starting temperature
+
+    # Populate with daisies: each cell has only one daisy (black or white)
+    white_nodes = StatsBase.sample(1:nv(space), Int(init_white * nv(space)); replace = false)
+    for n in white_nodes
+        wd = Daisy(nextid(model), vertex2coord(n, space), :white, rand(0:max_age), albedo_white)
+        add_agent_pos!(wd, model)
+    end
+    allowed = setdiff(1:nv(space), white_nodes)
+    black_nodes = StatsBase.sample(allowed, Int(init_black * nv(space)); replace = false)
+    for n in black_nodes
+        wd = Daisy(nextid(model), vertex2coord(n, space), :black, rand(0:max_age), albedo_black)
+        add_agent_pos!(wd, model)
+    end
+
+    return model
+end</code></pre><h2 id="Visualizing-and-animating"><a class="docs-heading-anchor" href="#Visualizing-and-animating">Visualizing &amp; animating</a><a id="Visualizing-and-animating-1"></a><a class="docs-heading-anchor-permalink" href="#Visualizing-and-animating" title="Permalink"></a></h2><p>Lets run the model with constant solar isolation and visualize the result</p><pre><code class="language-">Random.seed!(165) # hide
+model = daisyworld()</code></pre><p>To visualize we need to define the necessary functions for <a href="../../api/#AgentsPlots.plotabm"><code>plotabm</code></a>. The daisies will obviously be black or white, but the land will have a color that reflects its temperature, with -50 darkest and 100 ᵒC brightest color</p><pre><code class="language-julia">daisycolor(a::Daisy) = a.breed
+const landcolor = cgrad(:thermal)
+daisycolor(a::Land) = landcolor[(a.temperature+50)/150]</code></pre><p>And we plot daisies as circles, and land patches as squares</p><pre><code class="language-julia">daisyshape(a::Daisy) = :circle
+daisysize(a::Daisy) = 7
+daisyshape(a::Land) = :square
+daisysize(a::Land) = 8.8</code></pre><p>Notice that we want to ensure that the <code>Land</code> patches are always plotted first.</p><pre><code class="language-">plotsched = by_type((Land, Daisy), false)
+
+plotkwargs = (
+    ac = daisycolor, am = daisyshape, as = daisysize,
+    scheduler = plotsched, aspect_ratio = 1, size = (600, 600), showaxis = false,
+)
+
+p = plotabm(model; plotkwargs...)</code></pre><p>And after a couple of steps</p><pre><code class="language-">step!(model, agent_step!, model_step!, 5)
+p = plotabm(model; plotkwargs...)</code></pre><p>Let&#39;s do some animation now</p><pre><code class="language-">Random.seed!(165) # hide
+model = daisyworld()
+anim = @animate for i in 0:30
+    p = plotabm(model; plotkwargs...)
+    title!(p, &quot;step $(i)&quot;)
+    step!(model, agent_step!, model_step!)
+end
+gif(anim, &quot;daisyworld.gif&quot;, fps = 3)</code></pre><p>Running this animation for longer hints that this world achieves quasi-equilibrium for some input parameters, where one <code>breed</code> does not totally dominate the other. Of course we can check this easily through data collection. Notice that here we have to define a function <code>breed</code> that returns the daisy&#39;s <code>breed</code> field. We cannot use just <code>:breed</code> to automatically find it, because in this mixed agent model, the <code>Land</code> doesn&#39;t have any <code>breed</code>.</p><pre><code class="language-">black(y) = count(x -&gt; x == :black, y)
+white(y) = count(x -&gt; x == :white, y)
+breed(a) = a isa Daisy ? a.breed : :land
+adata = [(breed, black), (breed, white)]
+
+Random.seed!(165) # hide
+model = daisyworld(; solar_luminosity = 1.0)
+
+agent_df, model_df = run!(model, agent_step!, model_step!, 1000; adata = adata)
+
+p = plot(agent_df[!, :step], agent_df[!, :black_breed], label = &quot;black&quot;)
+plot!(p, agent_df[!, :step], agent_df[!, :white_breed], label = &quot;white&quot;)
+plot!(p; xlabel = &quot;tick&quot;, ylabel = &quot;daisy count&quot;)</code></pre><h2 id="Time-dependent-dynamics"><a class="docs-heading-anchor" href="#Time-dependent-dynamics">Time dependent dynamics</a><a id="Time-dependent-dynamics-1"></a><a class="docs-heading-anchor-permalink" href="#Time-dependent-dynamics" title="Permalink"></a></h2><p>To use the time-dependent dynamics we simply use the keyword <code>scenario = :ramp</code> during model creation. However, we also want to see how the planet surface temperature changes and would be nice to plot solar luminosity as well. Thus, we define in addition</p><pre><code class="language-julia">gettemperature(a) = a isa Land ? a.temperature : missing
+meantemperature(x) = mean(skipmissing(x))
+adata = [(breed, black), (breed, white), (gettemperature, meantemperature)]</code></pre><pre class="documenter-example-output">3-element Array{Tuple{Function,Function},1}:
+ (Main.ex-daisyworld.breed, Main.ex-daisyworld.black)
+ (Main.ex-daisyworld.breed, Main.ex-daisyworld.white)
+ (Main.ex-daisyworld.gettemperature, Main.ex-daisyworld.meantemperature)</pre><p>And, to have it as reference, we also record the solar luminosity value</p><pre><code class="language-julia">mdata = [:solar_luminosity]</code></pre><pre class="documenter-example-output">1-element Array{Symbol,1}:
+ :solar_luminosity</pre><p>And we run (and plot) everything</p><pre><code class="language-">Random.seed!(165) # hide
+model = daisyworld(solar_luminosity = 1.0, scenario = :ramp)
+agent_df, model_df = run!(model, agent_step!, model_step!, 1000; adata = adata, mdata = mdata)
+
+p = plot(agent_df[!, :step], agent_df[!, :black_breed], label = &quot;black&quot;)
+plot!(p, agent_df[!, :step], agent_df[!, :white_breed], label = &quot;white&quot;)
+plot!(p; xlabel = &quot;tick&quot;, ylabel = &quot;daisy count&quot;)
+
+p2 = plot(agent_df[!, :step], agent_df[!, aggname(adata[3])], ylabel = &quot;temperature&quot;)
+p3 = plot(model_df[!, :step], model_df[!, :solar_luminosity], ylabel = &quot;L&quot;, xlabel = &quot;ticks&quot;)
+
+plot(p, p2, p3, layout = (3, 1))</code></pre><h2 id="Interactive-scientific-research"><a class="docs-heading-anchor" href="#Interactive-scientific-research">Interactive scientific research</a><a id="Interactive-scientific-research-1"></a><a class="docs-heading-anchor-permalink" href="#Interactive-scientific-research" title="Permalink"></a></h2><p>Julia is an interactive language, and thus everything that you do with Agents.jl can be considered interactive. However, we can do even better by using our interactive application. In this example, rather than describing what solar forcing we want to investigate before hand, we use the interactive application, to control by ourselves, in real time, how much solar forcing is delivered to daisyworld.</p><p>So, let&#39;s use <code>interactive_abm</code> from the <a href="../../interact/#Interactive-application">Interactive application</a> page!</p><pre><code class="language-julia">using InteractiveChaos, Makie, Random
+Random.seed!(165)
+model = daisyworld(; solar_luminosity = 1.0, solar_change = 0.0, scenario = :change)</code></pre><p>Thankfully, we have already defined the necessary <code>adata, mdata</code> as well as the agent color/shape/size functions, and we can re-use them for the interactive application. Because <code>InteractiveChaos</code> uses a different plotting package, Makie.jl, the plotting functions we have defined for <code>plotabm</code> need to be slightly adjusted. In the near future, AgentsPlots.jl will move to Makie.jl, so no adjustment will be necessary.</p><pre><code class="language-julia">using AbstractPlotting: to_color
+daisycolor(a::Daisy) = RGBAf0(to_color(a.breed))
+const landcolor = cgrad(:thermal)
+daisycolor(a::Land) = to_color(landcolor[(a.temperature+50)/150])
+
+daisyshape(a::Daisy) = :circle
+daisysize(a::Daisy) = 0.6
+daisyshape(a::Land) = :rect
+daisysize(a::Land) = 1</code></pre><p>The only significant addition to use the interactive application is that we make a parameter container for surface albedo and for the rate of change of solar luminosity, and add some labels for clarity.</p><pre><code class="language-julia">params = Dict(
+    :solar_change =&gt; -0.1:0.01:0.1,
+    :surface_albedo =&gt; 0:0.01:1,
+)
+
+alabels = [&quot;black&quot;, &quot;white&quot;, &quot;T&quot;]
+mlabels = [&quot;L&quot;]
+
+landfirst = by_type((Land, Daisy), false)
+
+scene, agent_df, model_def = interactive_abm(
+    model, agent_step!, model_step!, params;
+    ac = daisycolor, am = daisyshape, as = daisysize,
+    mdata = mdata, adata = adata, alabels = alabels, mlabels = mlabels,
+    scheduler = landfirst # crucial to change model scheduler!
+)</code></pre><video width="100%" height="auto" controls autoplay loop>
+<source src="https://raw.githubusercontent.com/JuliaDynamics/JuliaDynamics/master/videos/agents/daisies.mp4?raw=true" type="video/mp4">
+</video></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../flock/">« Flocking</a><a class="docs-footer-nextpage" href="../predator_prey/">Predator-Prey »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 16 September 2020 20:57">Wednesday 16 September 2020</span>. Using Julia version 1.5.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
