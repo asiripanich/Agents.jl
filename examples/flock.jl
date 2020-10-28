@@ -48,9 +48,10 @@ function initialize_model(;
     separate_factor = 0.25,
     match_factor = 0.01,
     visual_distance = 5.0,
-    dims = (100, 100),
+    extent = (100, 100),
+    spacing = visual_distance / 1.5,
 )
-    space2d = ContinuousSpace(2; periodic = true, extend = dims)
+    space2d = ContinuousSpace(extent, spacing)
     model = ABM(Bird, space2d, scheduler = random_activation)
     for _ in 1:n_birds
         vel = Tuple(rand(2) * 2 .- 1)
@@ -65,7 +66,6 @@ function initialize_model(;
             visual_distance,
         )
     end
-    index!(model)
     return model
 end
 nothing # hide
@@ -75,69 +75,37 @@ nothing # hide
 # according to the three rules defined above.
 function agent_step!(bird, model)
     ## Obtain the ids of neighbors within the bird's visual distance
-    ids = space_neighbors(bird, model, bird.visual_distance)
+    neighbor_ids = nearby_ids(bird, model, bird.visual_distance)
+    N = 0
+    match = separate = cohere = (0.0, 0.0)
+    ## Calculate behaviour properties based on neighbors
+    for id in neighbor_ids
+        N += 1
+        neighbor = model[id].pos
+        heading = neighbor .- bird.pos
+
+        ## `cohere` computes the average position of neighboring birds
+        cohere = cohere .+ heading
+        if edistance(bird.pos, neighbor, model) < bird.separation
+        ## `separate` repels the bird away from neighboring birds
+            separate = separate .- heading
+        end
+        ## `match` computes the average trajectory of neighboring birds
+        match = match .+ model[id].vel
+    end
+    N = max(N, 1)
+    ## Normalise results based on model input and neighbor count
+    cohere = cohere ./ N .* bird.cohere_factor
+    separate = separate ./ N .* bird.separate_factor
+    match = match ./ N .* bird.match_factor
     ## Compute velocity based on rules defined above
-    bird.vel =
-        (
-            bird.vel .+ cohere(bird, model, ids) .+ separate(bird, model, ids) .+
-            match(bird, model, ids)
-        ) ./ 2
+    bird.vel = (bird.vel .+ cohere .+ separate .+ match) ./ 2
     bird.vel = bird.vel ./ norm(bird.vel)
     ## Move bird according to new velocity and speed
     move_agent!(bird, model, bird.speed)
 end
 
-distance(a1, a2) = sqrt(sum((a1.pos .- a2.pos) .^ 2))
-
-get_heading(a1, a2) = a1.pos .- a2.pos
-nothing # hide
-
-# `cohere` computes the average position of neighboring birds, weighted by importance
-function cohere(bird, model, ids)
-    N = max(length(ids), 1)
-    birds = model.agents
-    coherence = (0.0, 0.0)
-    for id in ids
-        coherence = coherence .+ get_heading(birds[id], bird)
-    end
-    return coherence ./ N .* bird.cohere_factor
-end
-nothing # hide
-
-# `separate` repels the bird away from neighboring birds
-function separate(bird, model, ids)
-    seperation_vec = (0.0, 0.0)
-    N = max(length(ids), 1)
-    birds = model.agents
-    for id in ids
-        neighbor = birds[id]
-        if distance(bird, neighbor) < bird.separation
-            seperation_vec = seperation_vec .- get_heading(neighbor, bird)
-        end
-    end
-    return seperation_vec ./ N .* bird.separate_factor
-end
-nothing # hide
-
-# `match` computes the average trajectory of neighboring birds, weighted by importance
-function match(bird, model, ids)
-    match_vector = (0.0, 0.0)
-    N = max(length(ids), 1)
-    birds = model.agents
-    for id in ids
-        match_vector = match_vector .+ birds[id].vel
-    end
-    return match_vector ./ N .* bird.match_factor
-end
-nothing # hide
-
-# ## Running the model
-Random.seed!(23182) # hide
-n_steps = 500
-model = initialize_model()
-step!(model, agent_step!, n_steps)
-
-# ## Plotting the birds
+# ## Plotting the flock
 # The great thing about [`plotabm`](@ref) is its flexibility. We can incorporate the
 # direction of the birds when plotting them, by making the "marker" function `am`
 # create a `Shape`: a triangle with same orientation as the bird's velocity.
@@ -156,13 +124,13 @@ gr() # hide
 Random.seed!(23182) # hide
 cd(@__DIR__) #src
 model = initialize_model()
-e = model.space.extend
+e = model.space.extent
 anim = @animate for i in 0:100
     i > 0 && step!(model, agent_step!, 1)
     p1 = plotabm(
         model;
         am = bird_triangle,
-        as = 10,
+        as = 7,
         showaxis = false,
         grid = false,
         xlims = (0, e[1]),

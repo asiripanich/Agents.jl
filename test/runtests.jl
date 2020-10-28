@@ -1,4 +1,4 @@
-using Test, Agents, Random, LightGraphs, SQLite, DataFrames
+using Test, Agents, Random, LightGraphs, DataFrames
 using StatsBase: mean
 
 mutable struct Agent0 <: AbstractAgent
@@ -74,5 +74,6 @@ end
     include("collect_tests.jl")
     include("continuousSpace_tests.jl")
     include("collisions_tests.jl")
+    include("graph_tests.jl")
 
 end

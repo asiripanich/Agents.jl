@@ -88,10 +88,13 @@ pages = [
     "API" => "api.md",
     "Interactive application" => "interact.md",
     "Ecosystem Integration" => [
+        "BlackBoxOptim.jl" => "examples/optim.md",
         "DifferentialEquations.jl" => "examples/diffeq.md",
-        "BlackBoxOptim" => "examples/optim.md"
+        "LightGraphs.jl" => "examples/schoolyard.md",
+        "Measurements.jl" => "examples/measurements.md"
         ],
-    "Comparison against Mesa (Python)" => "mesa.md"
+    "ABM Framework Comparison" => "comparison.md",
+    "Developer Docs" => "devdocs.md"
     ],
 )
 

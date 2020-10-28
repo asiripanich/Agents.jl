@@ -10,6 +10,9 @@ Agents will be activated as specified by the `model.scheduler`.
 the argument `agents_first` is `false` (which then first calls `model_step!` and then
 activates the agents).
 
+`step!` ignores scheduled IDs that do not exist within the model, allowing
+you to safely kill agents dynamically.
+
     step!(model, agent_step!, model_step!, n::Function, agents_first::Bool=true)
 
 In this version `n` is a function.
@@ -33,8 +36,8 @@ Ignore the agent dynamics. Use instead of `agent_step!`.
 """
 dummystep(agent, model) = nothing
 
-until(ss, n::Int, model) = ss < n
-until(ss, n, model) = !n(model, ss)
+until(s, n::Int, model) = s < n
+until(s, n, model) = !n(model, s)
 
 step!(model::ABM, agent_step!, n::Int=1, agents_first::Bool=true) = step!(model, agent_step!, dummystep, n, agents_first)
 
@@ -42,7 +45,7 @@ function step!(model::ABM, agent_step!, model_step!, n = 1, agents_first=true)
   s = 0
   while until(s, n, model)
     !agents_first && model_step!(model)
-    activation_order = model.scheduler(model)
+    activation_order = schedule(model)
     for index in activation_order
       haskey(model.agents, index) || continue
       agent_step!(model.agents[index], model)
